@@ -7,7 +7,8 @@ export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const appHostingBucket = new s3.Bucket(this, 'mini-project-front-source', {
+    const appHostingBucket = new s3.Bucket(this, 'mini-project-app-source', {
+        bucketName: 'mini-project-app-source',
         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
         removalPolicy: cdk.RemovalPolicy.DESTROY,
         websiteIndexDocument: 'index.html',
