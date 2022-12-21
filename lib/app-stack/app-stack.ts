@@ -41,9 +41,7 @@ export class AppStack extends cdk.Stack {
 		const distribution = new cloudfront.Distribution(this, 'distribution', {
 			comment: 'app-distribution',
 			defaultBehavior: {
-				origin: new cloudfrontOrigin.S3Origin(appHostingBucket, {
-          originAccessIdentity,
-        }),
+				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
 			}
 		})
 
