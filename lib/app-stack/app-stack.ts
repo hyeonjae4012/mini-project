@@ -12,9 +12,7 @@ export class AppStack extends cdk.Stack {
 
   	const appHostingBucket = new s3.Bucket(this, 'mini-project-app-source', {
       bucketName: 'mini-project-app-source',
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
-      websiteIndexDocument: 'index.html',
     });
   
 		const originAccessIdentity = new cloudfront.OriginAccessIdentity(
@@ -40,6 +38,7 @@ export class AppStack extends cdk.Stack {
 
 		const distribution = new cloudfront.Distribution(this, 'distribution', {
 			comment: 'app-distribution',
+			defaultRootObject: 'index.html',
 			defaultBehavior: {
 				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
 				allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
