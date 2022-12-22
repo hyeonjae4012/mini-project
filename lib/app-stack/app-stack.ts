@@ -6,7 +6,7 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as cloudfrontOrigin from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-
+import * as targets from 'aws-cdk-lib/aws-route53-targets';
 
 export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -63,5 +63,10 @@ export class AppStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 			}
 		})
+
+    new route53.ARecord(this, 'app-distribution-record-route53', {
+      target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution)),
+      zone: appHostedZone,
+    });
   }
 }
