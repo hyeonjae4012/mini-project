@@ -7,7 +7,8 @@ import * as cloudfrontOrigin from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { AppConstant } from '../constant'
+import { getSSMParameter } from '../util';
 
 export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -40,21 +41,21 @@ export class AppStack extends cdk.Stack {
   	appHostingBucket.addToResourcePolicy(appHostingBucketPolicyStatement);
 
     const appHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'app-hosted-zone', {
-      zoneName: ssm.StringParameter.valueForStringParameter(this, 'APP_DOMAIN'),
-      hostedZoneId: ssm.StringParameter.valueForStringParameter(this, 'APP_HOSTED_ZONE_ID'),
+      zoneName: getSSMParameter(this, AppConstant.APP_DOMAIN),
+      hostedZoneId: getSSMParameter(this, AppConstant.APP_HOSTED_ZONE_ID),
     });
 
     const appCert = new acm.DnsValidatedCertificate(this, 'CrossRegionCertificate', {
-      domainName: ssm.StringParameter.valueForStringParameter(this, 'APP_DOMAIN'),
+      domainName: getSSMParameter(this, AppConstant.APP_DOMAIN),
       hostedZone: appHostedZone,
-      region: ssm.StringParameter.valueForStringParameter(this, 'APP_ACM_REGION'),
+      region: getSSMParameter(this, AppConstant.APP_ACM_REGION),
       validation: acm.CertificateValidation.fromDns(appHostedZone)
     });
 
 		const distribution = new cloudfront.Distribution(this, 'distribution', {
 			comment: 'app-distribution',
 			defaultRootObject: 'index.html',
-      domainNames: [ssm.StringParameter.valueForStringParameter(this, 'APP_DOMAIN')],
+      domainNames: [getSSMParameter(this, AppConstant.APP_DOMAIN)],
       certificate: appCert,
 			defaultBehavior: {
 				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
