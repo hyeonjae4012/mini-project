@@ -4,6 +4,8 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as cloudfrontOrigin from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 
 
 export class AppStack extends cdk.Stack {
@@ -48,5 +50,14 @@ export class AppStack extends cdk.Stack {
 			}
 		})
 
+    const appHostedZone = route53.HostedZone.fromHostedZoneAttributes(scope, 'app-hosted-zone', {
+      zoneName: 'hyeonjae.classmethod.info',
+      hostedZoneId: 'Z03752012Z1IYBYZA9WHQ',
+    });
+
+    const appCert = new acm.Certificate(scope, 'api-certificate', {
+      domainName: 'hyeonjae.classmethod.info',
+      validation: acm.CertificateValidation.fromDns(appHostedZone),
+    });
   }
 }
