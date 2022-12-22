@@ -55,9 +55,10 @@ export class AppStack extends cdk.Stack {
       hostedZoneId: 'Z03752012Z1IYBYZA9WHQ',
     });
 
-    const appCert = new acm.Certificate(this, 'api-certificate', {
+    const appCert = new acm.DnsValidatedCertificate(this, 'CrossRegionCertificate', {
       domainName: 'hyeonjae.classmethod.info',
-      validation: acm.CertificateValidation.fromDns(appHostedZone),
+      hostedZone: appHostedZone,
+      region: 'us-east-1',
     });
   }
 }
