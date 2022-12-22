@@ -53,6 +53,7 @@ export class AppStack extends cdk.Stack {
 		const distribution = new cloudfront.Distribution(this, 'distribution', {
 			comment: 'app-distribution',
 			defaultRootObject: 'index.html',
+      domainNames: ['hyeonjae.classmethod.info'],
       certificate: appCert,
 			defaultBehavior: {
 				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
