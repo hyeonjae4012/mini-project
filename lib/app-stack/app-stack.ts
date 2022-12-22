@@ -38,18 +38,6 @@ export class AppStack extends cdk.Stack {
   
   	appHostingBucket.addToResourcePolicy(appHostingBucketPolicyStatement);
 
-		const distribution = new cloudfront.Distribution(this, 'distribution', {
-			comment: 'app-distribution',
-			defaultRootObject: 'index.html',
-			defaultBehavior: {
-				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
-				allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
-        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
-        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-			}
-		})
-
     const appHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'app-hosted-zone', {
       zoneName: 'hyeonjae.classmethod.info',
       hostedZoneId: 'Z03752012Z1IYBYZA9WHQ',
@@ -59,6 +47,20 @@ export class AppStack extends cdk.Stack {
       domainName: 'hyeonjae.classmethod.info',
       hostedZone: appHostedZone,
       region: 'us-east-1',
+      validation: acm.CertificateValidation.fromDns(appHostedZone)
     });
+
+		const distribution = new cloudfront.Distribution(this, 'distribution', {
+			comment: 'app-distribution',
+			defaultRootObject: 'index.html',
+      certificate: appCert,
+			defaultBehavior: {
+				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
+				allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+			}
+		})
   }
 }
