@@ -40,21 +40,21 @@ export class AppStack extends cdk.Stack {
   	appHostingBucket.addToResourcePolicy(appHostingBucketPolicyStatement);
 
     const appHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'app-hosted-zone', {
-      zoneName: ssm.StringParameter.valueForStringParameter(scope, 'APP_DOMAIN'),
-      hostedZoneId: ssm.StringParameter.valueForStringParameter(scope, 'APP_HOSTED_ZONE_ID'),
+      zoneName: ssm.StringParameter.valueForStringParameter(this, 'APP_DOMAIN'),
+      hostedZoneId: ssm.StringParameter.valueForStringParameter(this, 'APP_HOSTED_ZONE_ID'),
     });
 
     const appCert = new acm.DnsValidatedCertificate(this, 'CrossRegionCertificate', {
-      domainName: ssm.StringParameter.valueForStringParameter(scope, 'APP_DOMAIN'),
+      domainName: ssm.StringParameter.valueForStringParameter(this, 'APP_DOMAIN'),
       hostedZone: appHostedZone,
-      region: ssm.StringParameter.valueForStringParameter(scope, 'APP_ACM_REGION'),
+      region: ssm.StringParameter.valueForStringParameter(this, 'APP_ACM_REGION'),
       validation: acm.CertificateValidation.fromDns(appHostedZone)
     });
 
 		const distribution = new cloudfront.Distribution(this, 'distribution', {
 			comment: 'app-distribution',
 			defaultRootObject: 'index.html',
-      domainNames: [ssm.StringParameter.valueForStringParameter(scope, 'APP_DOMAIN')],
+      domainNames: [ssm.StringParameter.valueForStringParameter(this, 'APP_DOMAIN')],
       certificate: appCert,
 			defaultBehavior: {
 				origin: new cloudfrontOrigin.S3Origin(appHostingBucket),
