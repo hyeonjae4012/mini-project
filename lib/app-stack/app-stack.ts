@@ -50,12 +50,12 @@ export class AppStack extends cdk.Stack {
 			}
 		})
 
-    const appHostedZone = route53.HostedZone.fromHostedZoneAttributes(scope, 'app-hosted-zone', {
+    const appHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'app-hosted-zone', {
       zoneName: 'hyeonjae.classmethod.info',
       hostedZoneId: 'Z03752012Z1IYBYZA9WHQ',
     });
 
-    const appCert = new acm.Certificate(scope, 'api-certificate', {
+    const appCert = new acm.Certificate(this, 'api-certificate', {
       domainName: 'hyeonjae.classmethod.info',
       validation: acm.CertificateValidation.fromDns(appHostedZone),
     });
