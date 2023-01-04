@@ -3,6 +3,8 @@ export const handler = async (event: any) => {
       
   return {
       statuscode: 200,
-      body: 'Hello CDK'
+      body: 'Hello CDK',
+      isBase64Encoded: false,
+      headers: {"test": "test"}
   }
 }
