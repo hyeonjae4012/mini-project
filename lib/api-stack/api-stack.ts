@@ -7,15 +7,18 @@ export class ApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW");
-
-    const testResource = apiGw.root.addResource("test");
-    testResource.addMethod("GET");
-
     const demoFunction = new lambda.Function(this, 'demoFunction', {
       code: lambda.Code.fromAsset('src/handler'),
       handler: 'app.handler',
       runtime: lambda.Runtime.NODEJS_16_X
     })
+
+    const apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW");
+
+    const testResource = apiGw.root.addResource("test");
+    testResource.addMethod(
+      "GET",
+      new apigateway.LambdaIntegration(demoFunction),
+    );
   }
 }
