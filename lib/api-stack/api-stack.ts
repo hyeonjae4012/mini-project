@@ -15,17 +15,17 @@ export class ApiStack extends cdk.Stack {
     })
     
     const getFunction = new lambda.Function(this, 'getFunction', {
-      code: lambda.Code.fromAsset('src/handler'),
+      code: lambda.Code.fromAsset('src'),
       handler: 'handler/getLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X
     })
     const upsertFunction = new lambda.Function(this, 'upsertFunction', {
-      code: lambda.Code.fromAsset('src/handler'),
+      code: lambda.Code.fromAsset('src'),
       handler: 'handler/upsertLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X
     })
     const deleteFunction = new lambda.Function(this, 'deleteFunction', {
-      code: lambda.Code.fromAsset('src/handler'),
+      code: lambda.Code.fromAsset('src'),
       handler: 'handler/deleteLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X
     })
