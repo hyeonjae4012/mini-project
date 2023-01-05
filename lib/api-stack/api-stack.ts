@@ -19,7 +19,7 @@ export class ApiStack extends cdk.Stack {
       handler: 'getLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X
     })
-    const createFunction = new lambda.Function(this, 'createFunction', {
+    const upsertFunction = new lambda.Function(this, 'upsertFunction', {
       code: lambda.Code.fromAsset('src/handler'),
       handler: 'upsertLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X
@@ -35,7 +35,19 @@ export class ApiStack extends cdk.Stack {
     const testResource = apiGw.root.addResource("test");
     testResource.addMethod(
       "GET",
-      new apigateway.LambdaIntegration(demoFunction),
+      new apigateway.LambdaIntegration(getFunction),
+    );
+    testResource.addMethod(
+      "POST",
+      new apigateway.LambdaIntegration(upsertFunction),
+    );
+    testResource.addMethod(
+      "PUT",
+      new apigateway.LambdaIntegration(upsertFunction),
+    );
+    testResource.addMethod(
+      "DELETE",
+      new apigateway.LambdaIntegration(getFunction),
     );
 
     const testTable = new dynamodb.Table(this, "MyTestTable", {
@@ -47,6 +59,10 @@ export class ApiStack extends cdk.Stack {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       pointInTimeRecovery: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
-    })
+    });
+
+    testTable.grantReadWriteData(getFunction);
+    testTable.grantReadWriteData(upsertFunction);
+    testTable.grantReadWriteData(deleteFunction);
   }
 }
