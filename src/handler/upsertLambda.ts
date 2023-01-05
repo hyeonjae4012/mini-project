@@ -1,20 +1,12 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDBSource } from '../driver/dbClient'
 
 export const handler = async (event: any) => {
-
-  const DOC_CLIENT = new AWS.DynamoDB.DocumentClient({
-    region: 'ap-northeast-1',
-    endpoint: 'https://dynamodb.ap-northeast-1.amazonaws.com'
-  })
-
   const param = {
     TableName: 'MyTestTable',
     Item: event.param
   }
 
-  return DOC_CLIENT.put(param)
-    .promise()
-    .then((output) => {
-      return output
-    })
+  const DOC_CLIENT = new DynamoDBSource();
+
+  DOC_CLIENT.upsertOne(param)
 }
