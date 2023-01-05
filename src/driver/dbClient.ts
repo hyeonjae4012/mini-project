@@ -41,6 +41,9 @@ export class DynamoDBSource {
     .promise()
     .then((output) => {
       return output
+    })
+    .catch((err) => {
+      console.error(err)
     });
   };
 
@@ -49,6 +52,9 @@ export class DynamoDBSource {
     .promise()
     .then((output) => {
       return output
+    })
+    .catch((err) => {
+      console.error(err)
     });
   };
 
@@ -57,6 +63,9 @@ export class DynamoDBSource {
     .promise()
     .then((output) => {
       return output
+    })
+    .catch((err) => {
+      console.error(err)
     });
   };
 }
