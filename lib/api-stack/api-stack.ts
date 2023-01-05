@@ -13,6 +13,22 @@ export class ApiStack extends cdk.Stack {
       handler: 'app.handler',
       runtime: lambda.Runtime.NODEJS_16_X
     })
+    
+    const getFunction = new lambda.Function(this, 'getFunction', {
+      code: lambda.Code.fromAsset('src/handler'),
+      handler: 'getLambda.handler',
+      runtime: lambda.Runtime.NODEJS_16_X
+    })
+    const createFunction = new lambda.Function(this, 'createFunction', {
+      code: lambda.Code.fromAsset('src/handler'),
+      handler: 'upsertLambda.handler',
+      runtime: lambda.Runtime.NODEJS_16_X
+    })
+    const deleteFunction = new lambda.Function(this, 'deleteFunction', {
+      code: lambda.Code.fromAsset('src/handler'),
+      handler: 'deleteLambda.handler',
+      runtime: lambda.Runtime.NODEJS_16_X
+    })
 
     const apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW");
 
