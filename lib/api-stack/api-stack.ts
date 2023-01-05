@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 
 export class ApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -20,5 +21,16 @@ export class ApiStack extends cdk.Stack {
       "GET",
       new apigateway.LambdaIntegration(demoFunction),
     );
+
+    const testTable = new dynamodb.Table(this, "MyTestTable", {
+      partitionKey: {
+        name: "TestPartitionKey",
+        type: dynamodb.AttributeType.STRING,
+      },
+      tableName: "MyTestTable",
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      pointInTimeRecovery: true,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    })
   }
 }
