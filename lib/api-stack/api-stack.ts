@@ -47,7 +47,7 @@ export class ApiStack extends cdk.Stack {
     );
     testResource.addMethod(
       "DELETE",
-      new apigateway.LambdaIntegration(getFunction),
+      new apigateway.LambdaIntegration(deleteFunction),
     );
 
     const testTable = new dynamodb.Table(this, "MyTestTable", {
