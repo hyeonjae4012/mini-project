@@ -8,5 +8,5 @@ export const handler = async (event: any) => {
 
   const DOC_CLIENT = new DynamoDBSource();
 
-  DOC_CLIENT.upsertOne(param)
+  await DOC_CLIENT.upsertOne(param)
 }

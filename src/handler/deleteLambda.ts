@@ -9,5 +9,5 @@ export const handler = async (event: any) => {
 
   const DOC_CLIENT = new DynamoDBSource();
 
-  DOC_CLIENT.deleteOne(param)
+  await DOC_CLIENT.deleteOne(param)
 }
