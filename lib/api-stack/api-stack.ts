@@ -34,7 +34,13 @@ export class ApiStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_16_X
     })
 
-    const apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW");
+    const apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowMethods: apigateway.Cors.ALL_METHODS,
+        statusCode: 200,
+      },
+    });
 
     const testResource = apiGw.root.addResource("test");
     testResource.addMethod(
