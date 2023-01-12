@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - test/create-testLambda
 jobs:
   aws_cdk:
     name: Running Ubutu image

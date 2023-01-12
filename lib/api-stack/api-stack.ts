@@ -8,6 +8,10 @@ export class ApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // リソースの作成を別の Construct として分けるのが理想的
+    // 別の Construct にした時に、別の Construct で作成されるリソースはどうやって参照する？
+    // 例えば、API Gateway を作成する Construct で Lambda を作成する Construct 内の Lambda を参照するときに
+    // sdk で持ってくる？違うと思う、、import することでできる、、？
     const demoFunction = new lambda.Function(this, 'demoFunction', {
       code: lambda.Code.fromAsset('src'),
       handler: 'handler/app.handler',
