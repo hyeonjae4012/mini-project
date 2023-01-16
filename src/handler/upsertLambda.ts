@@ -1,12 +1,11 @@
 import { DynamoDBSource } from '../driver/dbClient'
 
 export const handler = async (event: any) => {
-
-  console.log(event)
+  const body = JSON.parse(event.body);
 
   const param = {
     TableName: 'MyTestTable',
-    Item: event.param
+    Item: body
   }
 
   const DOC_CLIENT = new DynamoDBSource();

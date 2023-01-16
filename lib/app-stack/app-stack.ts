@@ -70,7 +70,7 @@ export class AppStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 			},
       additionalBehaviors: {
-        '/prod/*': {
+        'prod/*': {
           origin: new cloudfrontOrigin.RestApiOrigin(props.apiGw, {}),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
