@@ -71,8 +71,9 @@ export class AppStack extends cdk.Stack {
 			},
       additionalBehaviors: {
         '/prod/*': {
-          origin: new cloudfrontOrigin.RestApiOrigin(props.apiGw),
+          origin: new cloudfrontOrigin.RestApiOrigin(props.apiGw, {}),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
         }
       }
 		})
