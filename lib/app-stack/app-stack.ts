@@ -9,10 +9,14 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import { AppConstant } from '../constant'
 import { getSSMParameter } from '../util';
+import { ApiStack } from '../api-stack/api-stack';
 
 export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    // api stack のリソース参照。このようにして、フィアル分けられるかも
+    const apiStack = new ApiStack(this, 'ApiStack');
 
   	const appHostingBucket = new s3.Bucket(this, 'mini-project-app-source', {
       bucketName: 'mini-project-app-source',
@@ -63,7 +67,13 @@ export class AppStack extends cdk.Stack {
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-			}
+			},
+      additionalBehaviors: {
+        'api/*': {
+          origin: new cloudfrontOrigin.RestApiOrigin(apiStack.apiGw),
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        }
+      }
 		})
 
     new route53.ARecord(this, 'app-distribution-record-route53', {

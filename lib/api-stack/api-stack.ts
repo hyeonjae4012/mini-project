@@ -5,6 +5,8 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 
 export class ApiStack extends cdk.Stack {
+  public readonly apiGw: apigateway.RestApi;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -34,15 +36,9 @@ export class ApiStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_16_X
     })
 
-    const apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW", {
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigateway.Cors.ALL_ORIGINS,
-        allowMethods: apigateway.Cors.ALL_METHODS,
-        statusCode: 200,
-      },
-    });
+    this.apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW");
 
-    const testResource = apiGw.root.addResource("test");
+    const testResource = this.apiGw.root.addResource("test");
     testResource.addMethod(
       "GET",
       new apigateway.LambdaIntegration(getFunction),
