@@ -38,7 +38,9 @@ export class ApiStack extends cdk.Stack {
 
     this.apiGw = new apigateway.RestApi(this, "hyeonjaeApiGW");
 
-    const testResource = this.apiGw.root.addResource("test");
+    const rootResource = this.apiGw.root.addResource("api");
+
+    const testResource = rootResource.addResource("test")
     testResource.addMethod(
       "GET",
       new apigateway.LambdaIntegration(getFunction),
