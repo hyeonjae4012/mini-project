@@ -9,14 +9,15 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import { AppConstant } from '../constant'
 import { getSSMParameter } from '../util';
-import { ApiStack } from '../api-stack/api-stack';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+
+interface AppStackProps extends cdk.StackProps{
+  apiGw: apigateway.RestApi
+}
 
 export class AppStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: AppStackProps) {
     super(scope, id, props);
-
-    // api stack のリソース参照。このようにして、フィアル分けられるかも
-    const apiStack = new ApiStack(this, 'ApiStack');
 
   	const appHostingBucket = new s3.Bucket(this, 'mini-project-app-source', {
       bucketName: 'mini-project-app-source',
@@ -70,7 +71,7 @@ export class AppStack extends cdk.Stack {
 			},
       additionalBehaviors: {
         'api/*': {
-          origin: new cloudfrontOrigin.RestApiOrigin(apiStack.apiGw),
+          origin: new cloudfrontOrigin.RestApiOrigin(props.apiGw),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         }
       }

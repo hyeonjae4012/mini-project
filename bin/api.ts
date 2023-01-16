@@ -6,6 +6,8 @@ import { AppStack } from '../lib/app-stack/app-stack';
 
 const app = new cdk.App();
 
-new ApiStack(app, 'ApiStack');
+const apiStack = new ApiStack(app, 'ApiStack');
 
-new AppStack(app, 'AppStack')
+new AppStack(app, 'AppStack', {
+  apiGw: apiStack.apiGw
+})
