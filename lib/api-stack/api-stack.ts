@@ -41,10 +41,7 @@ export class ApiStack extends cdk.Stack {
     const rootResource = this.apiGw.root.addResource("api");
 
     const testResource = rootResource.addResource("test")
-    testResource.addMethod(
-      "GET",
-      new apigateway.LambdaIntegration(getFunction),
-    );
+
     testResource.addMethod(
       "POST",
       new apigateway.LambdaIntegration(upsertFunction),
@@ -53,9 +50,18 @@ export class ApiStack extends cdk.Stack {
       "PUT",
       new apigateway.LambdaIntegration(upsertFunction),
     );
-    testResource.addMethod(
+
+    const testGetDeleteResource = testResource.addResource('{TestPartitionKey}');
+
+    testGetDeleteResource.addMethod(
+      "GET",
+      new apigateway.LambdaIntegration(getFunction),
+    );
+
+    testGetDeleteResource.addMethod(
       "DELETE",
       new apigateway.LambdaIntegration(deleteFunction),
+      
     );
 
     const testTable = new dynamodb.Table(this, "MyTestTable", {
