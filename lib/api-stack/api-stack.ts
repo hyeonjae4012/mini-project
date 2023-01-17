@@ -51,14 +51,12 @@ export class ApiStack extends cdk.Stack {
       new apigateway.LambdaIntegration(upsertFunction),
     );
 
-    const testGetDeleteResource = testResource.addResource('{TestPartitionKey}');
-
-    testGetDeleteResource.addMethod(
+    testResource.addMethod(
       "GET",
       new apigateway.LambdaIntegration(getFunction),
     );
 
-    testGetDeleteResource.addMethod(
+    testResource.addMethod(
       "DELETE",
       new apigateway.LambdaIntegration(deleteFunction),
       
