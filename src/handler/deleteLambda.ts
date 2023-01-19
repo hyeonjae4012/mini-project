@@ -11,5 +11,7 @@ export const handler = async (event: any) => {
 
   const DOC_CLIENT = new DynamoDBSource();
 
-  return await DOC_CLIENT.deleteOne(param)
+  const test = await DOC_CLIENT.deleteOne(param)
+  console.log(test)
+  return test
 }
