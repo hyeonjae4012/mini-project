@@ -74,6 +74,9 @@ export class AppStack extends cdk.Stack {
           origin: new cloudfrontOrigin.RestApiOrigin(props.apiGw, {}),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+          cachePolicy: new cloudfront.CachePolicy(this, 'test', {
+            queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
+          })
         }
       }
 		})
