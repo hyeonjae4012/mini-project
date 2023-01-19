@@ -51,6 +51,7 @@ export class DynamoDBSource {
     return this.DOC_CLIENT.get(params)
     .promise()
     .then((output) => {
+      console.log(output)
       return output
     })
     .catch((err) => {
