@@ -54,6 +54,11 @@ export class ApiStack extends cdk.Stack {
     testResource.addMethod(
       "GET",
       new apigateway.LambdaIntegration(getFunction),
+      {
+        requestParameters: {
+          'method.request.querystring.TestPartitionKey': true,
+        }
+      }
     );
 
     testResource.addMethod(
@@ -61,7 +66,7 @@ export class ApiStack extends cdk.Stack {
       new apigateway.LambdaIntegration(deleteFunction),
       {
         requestParameters: {
-          'method.request.querystring.test': true,
+          'method.request.querystring.TestPartitionKey': true,
         }
       }
     );
