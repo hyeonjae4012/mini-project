@@ -54,21 +54,21 @@ export class ApiStack extends cdk.Stack {
     testResource.addMethod(
       "GET",
       new apigateway.LambdaIntegration(getFunction),
-      // {
-      //   requestParameters: {
-      //     'method.request.querystring.TestPartitionKey': true,
-      //   }
-      // }
+      {
+        requestParameters: {
+          'method.request.querystring.TestPartitionKey': true,
+        }
+      }
     );
 
     testResource.addMethod(
       "DELETE",
       new apigateway.LambdaIntegration(deleteFunction),
-      // {
-      //   requestParameters: {
-      //     'method.request.querystring.TestPartitionKey': true,
-      //   }
-      // }
+      {
+        requestParameters: {
+          'method.request.querystring.TestPartitionKey': true,
+        }
+      }
     );
 
     const testTable = new dynamodb.Table(this, "MyTestTable", {
