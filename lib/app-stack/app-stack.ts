@@ -10,6 +10,7 @@ import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import { AppConstant } from '../constant'
 import { getSSMParameter } from '../util';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import { Duration } from 'aws-cdk-lib';
 
 interface AppStackProps extends cdk.StackProps{
   apiGw: apigateway.RestApi
@@ -75,7 +76,8 @@ export class AppStack extends cdk.Stack {
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
           cachePolicy: new cloudfront.CachePolicy(this, 'test', {
-            queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
+            queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
+            defaultTtl: Duration.minutes(0),
           })
         }
       }
