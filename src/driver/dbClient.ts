@@ -1,4 +1,5 @@
-import * as AWS from 'aws-sdk';
+import * as AWS from "aws-sdk";
+import {captureAWS} from "aws-xray-sdk-core";
 
 export type DynamoDbSourceProps = {
   region?: string;
@@ -30,7 +31,9 @@ export class DynamoDBSource {
   DOC_CLIENT: AWS.DynamoDB.DocumentClient;
 
   constructor(props?: DynamoDbSourceProps) {
-    this.DOC_CLIENT = new AWS.DynamoDB.DocumentClient({
+    const aws = captureAWS(AWS);
+
+    this.DOC_CLIENT = new aws.DynamoDB.DocumentClient({
       region: props?.region ?? 'ap-northeast-1',
       endpoint: props?.endpoint ?? 'https://dynamodb.ap-northeast-1.amazonaws.com'
     })
