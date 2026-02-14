@@ -9,18 +9,12 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "deploy": "cdk deploy --require-approval never --all"
-  },
-  "devDependencies": {
-    "@types/babel__traverse": "7.18.2",
-    "@types/jest": "^27.5.2",
-    "@types/node": "10.17.27",
-    "@types/prettier": "2.6.0",
-    "aws-cdk": "2.53.0",
-    "jest": "^27.5.1",
-    "ts-jest": "^27.1.4",
-    "ts-node": "^10.9.1",
-    "typescript": "~3.9.7"
+    "deploy": "cdk deploy --require-approval never --all",
+    "bundle-lambda": "npm run bundle:getAll && npm run bundle:getByDay && npm run bundle:upsert && npm run bundle:delete",
+    "bundle:getAll": "esbuild src/handler/getAllLambda.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/handler/getAllLambda.js --external:aws-sdk --external:aws-xray-sdk-core",
+    "bundle:getByDay": "esbuild src/handler/getByDayLambda.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/handler/getByDayLambda.js --external:aws-sdk --external:aws-xray-sdk-core",
+    "bundle:upsert": "esbuild src/handler/upsertLambda.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/handler/upsertLambda.js --external:aws-sdk --external:aws-xray-sdk-core",
+    "bundle:delete": "esbuild src/handler/deleteLambda.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/handler/deleteLambda.js --external:aws-sdk --external:aws-xray-sdk-core"
   },
   "dependencies": {
     "aws-cdk-lib": "2.53.0",
@@ -28,6 +22,20 @@
     "aws-xray-sdk": "^3.5.3",
     "aws-xray-sdk-core": "^3.5.3",
     "constructs": "^10.0.0",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "7.18.2",
+    "@types/jest": "^27.5.2",
+    "@types/node": "10.17.27",
+    "@types/prettier": "2.6.0",
+    "@types/uuid": "^8.3.4",
+    "aws-cdk": "2.53.0",
+    "esbuild": "^0.17.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.9.1",
+    "typescript": "~3.9.7"
   }
 }

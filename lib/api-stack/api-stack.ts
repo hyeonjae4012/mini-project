@@ -35,30 +35,30 @@ export class ApiStack extends cdk.Stack {
       },
     });
 
-    // Lambda関数の作成
+    // Lambda関数の作成（バンドル済みコードを使用）
     const getAllFunction = new lambda.Function(this, 'getAllFunction', {
-      code: lambda.Code.fromAsset('src'),
+      code: lambda.Code.fromAsset('dist'),
       handler: 'handler/getAllLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X,
       tracing: lambda.Tracing.ACTIVE,
     });
 
     const getByDayFunction = new lambda.Function(this, 'getByDayFunction', {
-      code: lambda.Code.fromAsset('src'),
+      code: lambda.Code.fromAsset('dist'),
       handler: 'handler/getByDayLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X,
       tracing: lambda.Tracing.ACTIVE,
     });
 
     const upsertFunction = new lambda.Function(this, 'upsertFunction', {
-      code: lambda.Code.fromAsset('src'),
+      code: lambda.Code.fromAsset('dist'),
       handler: 'handler/upsertLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X,
       tracing: lambda.Tracing.ACTIVE,
     });
 
     const deleteFunction = new lambda.Function(this, 'deleteFunction', {
-      code: lambda.Code.fromAsset('src'),
+      code: lambda.Code.fromAsset('dist'),
       handler: 'handler/deleteLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X,
       tracing: lambda.Tracing.ACTIVE,

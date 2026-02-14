@@ -1,17 +1,16 @@
-name: cdk deploy
+name: CDK Deploy
 
 on:
   push:
     branches:
       - main
-jobs:
-  aws_cdk:
-    name: Running Ubutu image
-    runs-on: ubuntu-latest
+    paths:
+      - 'mini-project/**'
 
-    strategy:
-      matrix:
-        node-version: [16.x]
+jobs:
+  deploy:
+    name: Deploy CDK Stack
+    runs-on: ubuntu-latest
 
     permissions:
       id-token: write
@@ -19,25 +18,37 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: mini-project/package-lock.json
 
       - name: Configure AWS credentials from IAM Role
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Install Dependencies
+        working-directory: mini-project
         run: npm ci
 
-      - name: Build Code
-        run: |
-          npm run build
+      - name: Build TypeScript
+        working-directory: mini-project
+        run: npm run build
 
-      - name: CDK deploy Api Stack
+      - name: Bundle Lambda Functions
+        working-directory: mini-project
+        run: npm run bundle-lambda
+
+      - name: CDK Synth
+        working-directory: mini-project
+        run: npx cdk synth
+
+      - name: CDK Deploy
+        working-directory: mini-project
         run: npm run deploy
