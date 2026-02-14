@@ -2,10 +2,9 @@ import { DynamoDBSource } from '../driver/dbClient'
 
 export const handler = async (event: any) => {
   try {
-    const id = event.pathParameters?.id;
     const day = event.pathParameters?.day;
 
-    if (!id || !day) {
+    if (!day) {
       return {
         statusCode: 400,
         headers: {
@@ -14,22 +13,26 @@ export const handler = async (event: any) => {
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
         },
         body: JSON.stringify({
-          error: 'Both id and day parameters are required'
+          error: 'Day parameter is required'
         })
       };
     }
 
+    const DOC_CLIENT = new DynamoDBSource();
+
     const param = {
       TableName: 'TripScheduleTable',
-      Key: {
-        id: id,
-        day: day
+      IndexName: 'DayIndex',
+      KeyConditionExpression: '#day = :day',
+      ExpressionAttributeNames: {
+        '#day': 'day'
+      },
+      ExpressionAttributeValues: {
+        ':day': day
       }
     }
 
-    const DOC_CLIENT = new DynamoDBSource();
-
-    await DOC_CLIENT.deleteOne(param);
+    const result = await DOC_CLIENT.queryByDay(param);
 
     return {
       statusCode: 200,
@@ -39,7 +42,7 @@ export const handler = async (event: any) => {
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
       },
       body: JSON.stringify({
-        message: 'Schedule deleted successfully'
+        items: result?.Items || []
       })
     };
   } catch (error) {
@@ -56,4 +59,4 @@ export const handler = async (event: any) => {
       })
     };
   }
-}
+};

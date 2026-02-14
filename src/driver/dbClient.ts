@@ -27,6 +27,22 @@ export type getDataParams = {
   }
 }
 
+export type scanDataParams = {
+  TableName: string;
+}
+
+export type queryDataParams = {
+  TableName: string;
+  IndexName?: string;
+  KeyConditionExpression: string;
+  ExpressionAttributeNames?: {
+    [key: string]: string
+  };
+  ExpressionAttributeValues: {
+    [key: string]: string
+  }
+}
+
 export class DynamoDBSource {
   DOC_CLIENT: AWS.DynamoDB.DocumentClient;
 
@@ -63,6 +79,28 @@ export class DynamoDBSource {
 
   async deleteOne(params: deleteDataParams){
     return this.DOC_CLIENT.delete(params)
+    .promise()
+    .then((output) => {
+      return output
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+  };
+
+  async scanAll(params: scanDataParams){
+    return this.DOC_CLIENT.scan(params)
+    .promise()
+    .then((output) => {
+      return output
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+  };
+
+  async queryByDay(params: queryDataParams){
+    return this.DOC_CLIENT.query(params)
     .promise()
     .then((output) => {
       return output
